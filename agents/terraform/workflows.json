@@ -1,0 +1,233 @@
+{
+  "name": "Terraform Workflow Automation",
+  "version": "1.0.0",
+  "workflows": [
+    {
+      "name": "terraform-init-plan-apply",
+      "description": "Complete Terraform workflow from initialization to apply",
+      "steps": [
+        {
+          "name": "Format Code",
+          "command": "terraform fmt -recursive",
+          "description": "Format all Terraform files"
+        },
+        {
+          "name": "Initialize",
+          "command": "terraform init -upgrade",
+          "description": "Initialize Terraform and upgrade providers"
+        },
+        {
+          "name": "Validate",
+          "command": "terraform validate",
+          "description": "Validate Terraform configuration"
+        },
+        {
+          "name": "Security Scan",
+          "command": "checkov -d . --framework terraform",
+          "description": "Run security scan with Checkov"
+        },
+        {
+          "name": "Plan",
+          "command": "terraform plan -out=tfplan",
+          "description": "Generate execution plan"
+        },
+        {
+          "name": "Show Plan",
+          "command": "terraform show -json tfplan | jq",
+          "description": "Display plan in readable format"
+        },
+        {
+          "name": "Apply",
+          "command": "terraform apply tfplan",
+          "description": "Apply the execution plan",
+          "requiresConfirmation": true
+        }
+      ]
+    },
+    {
+      "name": "terraform-destroy",
+      "description": "Safely destroy Terraform-managed infrastructure",
+      "steps": [
+        {
+          "name": "Plan Destroy",
+          "command": "terraform plan -destroy -out=destroy.tfplan",
+          "description": "Generate destruction plan"
+        },
+        {
+          "name": "Review Destroy Plan",
+          "command": "terraform show destroy.tfplan",
+          "description": "Review what will be destroyed"
+        },
+        {
+          "name": "Destroy",
+          "command": "terraform apply destroy.tfplan",
+          "description": "Execute destruction",
+          "requiresConfirmation": true
+        }
+      ]
+    },
+    {
+      "name": "terraform-module-test",
+      "description": "Test Terraform module",
+      "steps": [
+        {
+          "name": "Format Check",
+          "command": "terraform fmt -check -recursive",
+          "description": "Check formatting"
+        },
+        {
+          "name": "Initialize",
+          "command": "terraform init",
+          "description": "Initialize module"
+        },
+        {
+          "name": "Validate",
+          "command": "terraform validate",
+          "description": "Validate module configuration"
+        },
+        {
+          "name": "Lint",
+          "command": "tflint --recursive",
+          "description": "Lint Terraform code"
+        },
+        {
+          "name": "Security Scan",
+          "command": "checkov -d . --framework terraform --quiet",
+          "description": "Security and compliance scan"
+        },
+        {
+          "name": "Documentation",
+          "command": "terraform-docs markdown table . > README.md",
+          "description": "Generate module documentation"
+        }
+      ]
+    },
+    {
+      "name": "terraform-drift-detection",
+      "description": "Detect configuration drift",
+      "steps": [
+        {
+          "name": "Refresh State",
+          "command": "terraform plan -refresh-only",
+          "description": "Check for drift without making changes"
+        },
+        {
+          "name": "Show State",
+          "command": "terraform show",
+          "description": "Display current state"
+        }
+      ]
+    },
+    {
+      "name": "terraform-workspace-switch",
+      "description": "Switch between Terraform workspaces",
+      "steps": [
+        {
+          "name": "List Workspaces",
+          "command": "terraform workspace list",
+          "description": "Show available workspaces"
+        },
+        {
+          "name": "Select Workspace",
+          "command": "terraform workspace select ${WORKSPACE}",
+          "description": "Switch to target workspace",
+          "variables": ["WORKSPACE"]
+        },
+        {
+          "name": "Show Current",
+          "command": "terraform workspace show",
+          "description": "Confirm current workspace"
+        }
+      ]
+    },
+    {
+      "name": "terraform-import-resource",
+      "description": "Import existing AWS resource into Terraform",
+      "steps": [
+        {
+          "name": "Generate Config",
+          "command": "terraform plan -generate-config-out=imported.tf",
+          "description": "Generate configuration for import"
+        },
+        {
+          "name": "Import Resource",
+          "command": "terraform import ${RESOURCE_TYPE}.${RESOURCE_NAME} ${RESOURCE_ID}",
+          "description": "Import the resource",
+          "variables": ["RESOURCE_TYPE", "RESOURCE_NAME", "RESOURCE_ID"]
+        },
+        {
+          "name": "Verify Import",
+          "command": "terraform plan",
+          "description": "Verify no changes needed"
+        }
+      ]
+    },
+    {
+      "name": "terraform-state-management",
+      "description": "Manage Terraform state",
+      "steps": [
+        {
+          "name": "List Resources",
+          "command": "terraform state list",
+          "description": "List all resources in state"
+        },
+        {
+          "name": "Show Resource",
+          "command": "terraform state show ${RESOURCE_ADDRESS}",
+          "description": "Show specific resource details",
+          "variables": ["RESOURCE_ADDRESS"]
+        },
+        {
+          "name": "Pull State",
+          "command": "terraform state pull > terraform.tfstate.backup",
+          "description": "Backup current state"
+        }
+      ]
+    },
+    {
+      "name": "terraform-upgrade-providers",
+      "description": "Upgrade Terraform providers",
+      "steps": [
+        {
+          "name": "Show Current Versions",
+          "command": "terraform version",
+          "description": "Display current Terraform and provider versions"
+        },
+        {
+          "name": "Upgrade Providers",
+          "command": "terraform init -upgrade",
+          "description": "Upgrade to latest provider versions"
+        },
+        {
+          "name": "Update Lock File",
+          "command": "terraform providers lock -platform=darwin_amd64 -platform=darwin_arm64 -platform=linux_amd64",
+          "description": "Update provider lock file for multiple platforms"
+        },
+        {
+          "name": "Test Upgrade",
+          "command": "terraform plan",
+          "description": "Verify upgrade didn't break anything"
+        }
+      ]
+    }
+  ],
+  "quickCommands": {
+    "fmt": "terraform fmt -recursive",
+    "init": "terraform init",
+    "validate": "terraform validate",
+    "plan": "terraform plan",
+    "apply": "terraform apply",
+    "destroy": "terraform destroy",
+    "output": "terraform output",
+    "graph": "terraform graph | dot -Tsvg > graph.svg",
+    "console": "terraform console",
+    "taint": "terraform taint ${RESOURCE}",
+    "untaint": "terraform untaint ${RESOURCE}"
+  },
+  "preCommitChecks": [
+    "terraform fmt -check -recursive",
+    "terraform validate",
+    "tflint",
+    "checkov -d . --framework terraform --quiet"
+  ]
+}

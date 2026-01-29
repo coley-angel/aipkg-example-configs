@@ -1,0 +1,286 @@
+{
+  "name": "Python Development Snippets",
+  "version": "1.0.0",
+  "snippets": {
+    "pydantic_model": {
+      "prefix": "pydantic",
+      "description": "Pydantic model with validation",
+      "body": [
+        "from pydantic import BaseModel, Field, validator",
+        "from typing import Optional",
+        "",
+        "class ${1:ModelName}(BaseModel):",
+        "    \"\"\"${2:Model description}.\"\"\"",
+        "    ${3:field_name}: ${4:str} = Field(..., ${5:min_length=1})",
+        "    ${6:optional_field}: Optional[${7:int}] = None",
+        "    ",
+        "    @validator('${3:field_name}')",
+        "    def validate_${3:field_name}(cls, v: ${4:str}) -> ${4:str}:",
+        "        \"\"\"Validate ${3:field_name}.\"\"\"",
+        "        if not v:",
+        "            raise ValueError('${3:field_name} cannot be empty')",
+        "        return v"
+      ]
+    },
+    "async_function": {
+      "prefix": "asyncfunc",
+      "description": "Async function with type hints",
+      "body": [
+        "async def ${1:function_name}(${2:param}: ${3:str}) -> ${4:None}:",
+        "    \"\"\"${5:Function description}.",
+        "    ",
+        "    Args:",
+        "        ${2:param}: ${6:Parameter description}",
+        "        ",
+        "    Returns:",
+        "        ${7:Return value description}",
+        "    \"\"\"",
+        "    ${0:pass}"
+      ]
+    },
+    "dataclass": {
+      "prefix": "dataclass",
+      "description": "Dataclass with type hints",
+      "body": [
+        "from dataclasses import dataclass, field",
+        "from typing import List, Optional",
+        "",
+        "@dataclass",
+        "class ${1:ClassName}:",
+        "    \"\"\"${2:Class description}.\"\"\"",
+        "    ${3:name}: ${4:str}",
+        "    ${5:items}: List[${6:str}] = field(default_factory=list)",
+        "    ${7:optional}: Optional[${8:int}] = None",
+        "    ",
+        "    def __post_init__(self) -> None:",
+        "        \"\"\"Validate after initialization.\"\"\"",
+        "        ${0:pass}"
+      ]
+    },
+    "context_manager": {
+      "prefix": "contextmgr",
+      "description": "Context manager with contextlib",
+      "body": [
+        "from contextlib import contextmanager",
+        "from typing import Generator",
+        "",
+        "@contextmanager",
+        "def ${1:manager_name}(${2:param}: ${3:str}) -> Generator[${4:Any}, None, None]:",
+        "    \"\"\"${5:Context manager description}.",
+        "    ",
+        "    Args:",
+        "        ${2:param}: ${6:Parameter description}",
+        "        ",
+        "    Yields:",
+        "        ${7:Yielded value description}",
+        "    \"\"\"",
+        "    ${8:resource} = ${9:acquire_resource()}",
+        "    try:",
+        "        yield ${8:resource}",
+        "    finally:",
+        "        ${10:cleanup(resource)}"
+      ]
+    },
+    "pytest_fixture": {
+      "prefix": "fixture",
+      "description": "Pytest fixture",
+      "body": [
+        "@pytest.fixture",
+        "def ${1:fixture_name}(${2:tmp_path}: Path) -> ${3:ReturnType}:",
+        "    \"\"\"${4:Fixture description}.\"\"\"",
+        "    ${5:# Setup}",
+        "    ${6:resource} = ${7:create_resource()}",
+        "    yield ${6:resource}",
+        "    ${8:# Teardown}",
+        "    ${0:pass}"
+      ]
+    },
+    "pytest_parametrize": {
+      "prefix": "parametrize",
+      "description": "Pytest parametrize decorator",
+      "body": [
+        "@pytest.mark.parametrize('${1:input},${2:expected}', [",
+        "    (${3:value1}, ${4:expected1}),",
+        "    (${5:value2}, ${6:expected2}),",
+        "])",
+        "def test_${7:function_name}(${1:input}: ${8:type}, ${2:expected}: ${9:type}) -> None:",
+        "    \"\"\"${10:Test description}.\"\"\"",
+        "    result = ${11:function_to_test}(${1:input})",
+        "    assert result == ${2:expected}"
+      ]
+    },
+    "click_command": {
+      "prefix": "clickcmd",
+      "description": "Click CLI command",
+      "body": [
+        "@click.command()",
+        "@click.argument('${1:arg_name}', type=${2:str})",
+        "@click.option('--${3:option}', '-${4:o}', help='${5:Option description}')",
+        "def ${6:command_name}(${1:arg_name}: ${2:str}, ${3:option}: Optional[${7:str}]) -> None:",
+        "    \"\"\"${8:Command description}.\"\"\"",
+        "    try:",
+        "        ${9:# Command logic}",
+        "        click.echo('${10:Success message}')",
+        "    except Exception as e:",
+        "        raise click.ClickException(str(e))"
+      ]
+    },
+    "logger_setup": {
+      "prefix": "logger",
+      "description": "Setup logger for module",
+      "body": [
+        "import logging",
+        "",
+        "logger = logging.getLogger(__name__)",
+        "",
+        "def setup_logging(level: str = 'INFO') -> None:",
+        "    \"\"\"Configure logging for the application.\"\"\"",
+        "    logging.basicConfig(",
+        "        level=getattr(logging, level.upper()),",
+        "        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'",
+        "    )"
+      ]
+    },
+    "exception_class": {
+      "prefix": "exception",
+      "description": "Custom exception class",
+      "body": [
+        "class ${1:CustomError}(Exception):",
+        "    \"\"\"${2:Exception description}.\"\"\"",
+        "    ",
+        "    def __init__(self, message: str, ${3:code}: Optional[int] = None) -> None:",
+        "        \"\"\"Initialize exception.",
+        "        ",
+        "        Args:",
+        "            message: Error message",
+        "            ${3:code}: Optional error code",
+        "        \"\"\"",
+        "        super().__init__(message)",
+        "        self.message = message",
+        "        self.${3:code} = ${3:code}"
+      ]
+    },
+    "property_decorator": {
+      "prefix": "property",
+      "description": "Property with getter and setter",
+      "body": [
+        "@property",
+        "def ${1:property_name}(self) -> ${2:str}:",
+        "    \"\"\"${3:Property description}.\"\"\"",
+        "    return self._${1:property_name}",
+        "",
+        "@${1:property_name}.setter",
+        "def ${1:property_name}(self, value: ${2:str}) -> None:",
+        "    \"\"\"Set ${1:property_name}.",
+        "    ",
+        "    Args:",
+        "        value: ${4:Value description}",
+        "        ",
+        "    Raises:",
+        "        ValueError: If value is invalid",
+        "    \"\"\"",
+        "    if not value:",
+        "        raise ValueError('${1:property_name} cannot be empty')",
+        "    self._${1:property_name} = value"
+      ]
+    },
+    "retry_decorator": {
+      "prefix": "retry",
+      "description": "Retry decorator with tenacity",
+      "body": [
+        "from tenacity import retry, stop_after_attempt, wait_exponential",
+        "",
+        "@retry(",
+        "    stop=stop_after_attempt(${1:3}),",
+        "    wait=wait_exponential(multiplier=${2:1}, min=${3:2}, max=${4:10})",
+        ")",
+        "def ${5:function_name}(${6:param}: ${7:str}) -> ${8:Any}:",
+        "    \"\"\"${9:Function with retry logic}.\"\"\"",
+        "    ${0:pass}"
+      ]
+    },
+    "api_client": {
+      "prefix": "apiclient",
+      "description": "HTTP API client class",
+      "body": [
+        "import httpx",
+        "from typing import Dict, Any, Optional",
+        "",
+        "class ${1:APIClient}:",
+        "    \"\"\"${2:API client description}.\"\"\"",
+        "    ",
+        "    def __init__(self, base_url: str, api_key: str, timeout: int = 30) -> None:",
+        "        \"\"\"Initialize API client.",
+        "        ",
+        "        Args:",
+        "            base_url: Base URL for API",
+        "            api_key: API authentication key",
+        "            timeout: Request timeout in seconds",
+        "        \"\"\"",
+        "        self.base_url = base_url.rstrip('/')",
+        "        self.client = httpx.Client(",
+        "            base_url=self.base_url,",
+        "            timeout=timeout,",
+        "            headers={'Authorization': f'Bearer {api_key}'}",
+        "        )",
+        "    ",
+        "    def get(self, endpoint: str, params: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:",
+        "        \"\"\"Make GET request.\"\"\"",
+        "        response = self.client.get(endpoint, params=params)",
+        "        response.raise_for_status()",
+        "        return response.json()",
+        "    ",
+        "    def __enter__(self) -> '${1:APIClient}':",
+        "        return self",
+        "    ",
+        "    def __exit__(self, *args) -> None:",
+        "        self.client.close()"
+      ]
+    },
+    "enum_class": {
+      "prefix": "enum",
+      "description": "Enum class definition",
+      "body": [
+        "from enum import Enum, auto",
+        "",
+        "class ${1:StatusEnum}(str, Enum):",
+        "    \"\"\"${2:Enum description}.\"\"\"",
+        "    ${3:PENDING} = '${4:pending}'",
+        "    ${5:ACTIVE} = '${6:active}'",
+        "    ${7:COMPLETED} = '${8:completed}'"
+      ]
+    },
+    "singleton_pattern": {
+      "prefix": "singleton",
+      "description": "Singleton pattern implementation",
+      "body": [
+        "from typing import Optional",
+        "",
+        "class ${1:Singleton}:",
+        "    \"\"\"${2:Singleton class description}.\"\"\"",
+        "    _instance: Optional['${1:Singleton}'] = None",
+        "    ",
+        "    def __new__(cls) -> '${1:Singleton}':",
+        "        if cls._instance is None:",
+        "            cls._instance = super().__new__(cls)",
+        "        return cls._instance",
+        "    ",
+        "    def __init__(self) -> None:",
+        "        \"\"\"Initialize singleton.\"\"\"",
+        "        if not hasattr(self, '_initialized'):",
+        "            ${0:# Initialization code}",
+        "            self._initialized = True"
+      ]
+    },
+    "type_alias": {
+      "prefix": "typealias",
+      "description": "Type alias definition",
+      "body": [
+        "from typing import TypeAlias, Dict, List, Union",
+        "",
+        "${1:ConfigDict}: TypeAlias = Dict[str, Union[str, int, List[str]]]",
+        "${2:ResultList}: TypeAlias = List[Dict[str, ${3:Any}]]"
+      ]
+    }
+  }
+}

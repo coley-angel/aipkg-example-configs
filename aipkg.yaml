@@ -1,0 +1,81 @@
+version: "1.0"
+
+# IDE configurations
+ides:
+  vscode:
+    name: "VSCode"
+    base_path: "~/.vscode"
+  
+  windsurf:
+    name: "Windsurf"
+    base_path: "~/.windsurf"
+  
+  claude:
+    name: "Claude Desktop"
+    base_path: "~/Library/Application Support/Claude"
+
+# Agent definitions
+agents:
+  terraform_pro:
+    name: "terraform_pro"
+    description: "Professional Terraform development agent with IaC best practices, security scanning, and AWS expertise"
+    version: "1.0.0"
+    files:
+      # VSCode configurations
+      - source_path: "agents/terraform/rules.md"
+        dest_path: "~/.cascade/rules/terraform_pro.md"
+        ide: "vscode"
+        description: "Terraform coding standards and best practices for VSCode"
+      
+      - source_path: "agents/terraform/context.md"
+        dest_path: "~/.cascade/context/terraform_pro.md"
+        ide: "vscode"
+        description: "Terraform development context and patterns for VSCode"
+      
+      - source_path: "agents/terraform/workflows.json"
+        dest_path: "~/.vscode/workflows/terraform_pro.json"
+        ide: "vscode"
+        description: "Terraform workflow automation for VSCode"
+      
+      # Windsurf configurations
+      - source_path: "agents/terraform/rules.md"
+        dest_path: "~/.windsurf/cascade/rules/terraform_pro.md"
+        ide: "windsurf"
+        description: "Terraform coding standards for Windsurf"
+      
+      - source_path: "agents/terraform/context.md"
+        dest_path: "~/.windsurf/cascade/context/terraform_pro.md"
+        ide: "windsurf"
+        description: "Terraform development context for Windsurf"
+
+  python_dev:
+    name: "python_dev"
+    description: "Python development agent with modern best practices, type hints, and testing patterns"
+    version: "1.0.0"
+    files:
+      # VSCode configurations
+      - source_path: "agents/python/rules.md"
+        dest_path: "~/.cascade/rules/python_dev.md"
+        ide: "vscode"
+        description: "Python coding standards and best practices for VSCode"
+      
+      - source_path: "agents/python/context.md"
+        dest_path: "~/.cascade/context/python_dev.md"
+        ide: "vscode"
+        description: "Python development context and patterns for VSCode"
+      
+      - source_path: "agents/python/snippets.json"
+        dest_path: "~/.vscode/snippets/python_dev.json"
+        ide: "vscode"
+        description: "Python code snippets for VSCode"
+      
+      # Windsurf configurations
+      - source_path: "agents/python/rules.md"
+        dest_path: "~/.windsurf/cascade/rules/python_dev.md"
+        ide: "windsurf"
+        description: "Python coding standards for Windsurf"
+      
+      - source_path: "agents/python/context.md"
+        dest_path: "~/.windsurf/cascade/context/python_dev.md"
+        ide: "windsurf"
+        description: "Python development context for Windsurf"
