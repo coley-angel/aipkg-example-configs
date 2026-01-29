@@ -1,0 +1,240 @@
+{
+  "name": "Python Development Workflows",
+  "version": "1.0.0",
+  "workflows": [
+    {
+      "name": "python-test-coverage",
+      "description": "Run tests with coverage report",
+      "steps": [
+        {
+          "name": "Run Tests",
+          "command": "pytest -v --cov=src --cov-report=term-missing",
+          "description": "Execute test suite with coverage"
+        },
+        {
+          "name": "Generate HTML Report",
+          "command": "pytest --cov=src --cov-report=html",
+          "description": "Generate HTML coverage report"
+        },
+        {
+          "name": "Open Report",
+          "command": "open htmlcov/index.html",
+          "description": "Open coverage report in browser"
+        }
+      ]
+    },
+    {
+      "name": "python-format-lint",
+      "description": "Format and lint Python code",
+      "steps": [
+        {
+          "name": "Format with Black",
+          "command": "black .",
+          "description": "Format code with Black"
+        },
+        {
+          "name": "Sort Imports",
+          "command": "isort .",
+          "description": "Sort imports with isort"
+        },
+        {
+          "name": "Lint with Ruff",
+          "command": "ruff check . --fix",
+          "description": "Lint and auto-fix with Ruff"
+        },
+        {
+          "name": "Type Check",
+          "command": "mypy src/",
+          "description": "Run type checking with mypy"
+        }
+      ]
+    },
+    {
+      "name": "python-security-scan",
+      "description": "Run security and vulnerability scans",
+      "steps": [
+        {
+          "name": "Bandit Security Scan",
+          "command": "bandit -r src/ -f json -o bandit-report.json",
+          "description": "Scan for security issues"
+        },
+        {
+          "name": "Safety Check",
+          "command": "safety check --json",
+          "description": "Check dependencies for vulnerabilities"
+        },
+        {
+          "name": "Show Results",
+          "command": "cat bandit-report.json | jq",
+          "description": "Display security scan results"
+        }
+      ]
+    },
+    {
+      "name": "python-build-package",
+      "description": "Build Python package",
+      "steps": [
+        {
+          "name": "Clean Build",
+          "command": "rm -rf dist/ build/ *.egg-info",
+          "description": "Clean previous builds"
+        },
+        {
+          "name": "Build Package",
+          "command": "python -m build",
+          "description": "Build wheel and source distribution"
+        },
+        {
+          "name": "Check Package",
+          "command": "twine check dist/*",
+          "description": "Validate package metadata"
+        }
+      ]
+    },
+    {
+      "name": "python-install-dev",
+      "description": "Install package in development mode",
+      "steps": [
+        {
+          "name": "Install with uv",
+          "command": "uv pip install -e '.[dev]'",
+          "description": "Install package with dev dependencies"
+        },
+        {
+          "name": "Verify Installation",
+          "command": "python -c 'import ${PACKAGE_NAME}; print(${PACKAGE_NAME}.__version__)'",
+          "description": "Verify package is installed",
+          "variables": ["PACKAGE_NAME"]
+        }
+      ]
+    },
+    {
+      "name": "python-run-pre-commit",
+      "description": "Run all pre-commit hooks",
+      "steps": [
+        {
+          "name": "Install Hooks",
+          "command": "pre-commit install",
+          "description": "Install pre-commit hooks"
+        },
+        {
+          "name": "Run All Hooks",
+          "command": "pre-commit run --all-files",
+          "description": "Execute all pre-commit checks"
+        }
+      ]
+    },
+    {
+      "name": "python-profile-performance",
+      "description": "Profile Python application performance",
+      "steps": [
+        {
+          "name": "Run with cProfile",
+          "command": "python -m cProfile -o profile.stats ${SCRIPT_PATH}",
+          "description": "Profile script execution",
+          "variables": ["SCRIPT_PATH"]
+        },
+        {
+          "name": "Generate Stats",
+          "command": "python -c 'import pstats; p = pstats.Stats(\"profile.stats\"); p.sort_stats(\"cumulative\"); p.print_stats(20)'",
+          "description": "Display top 20 time-consuming functions"
+        },
+        {
+          "name": "Visualize with snakeviz",
+          "command": "snakeviz profile.stats",
+          "description": "Open interactive profiling visualization"
+        }
+      ]
+    },
+    {
+      "name": "python-generate-docs",
+      "description": "Generate project documentation",
+      "steps": [
+        {
+          "name": "Generate API Docs",
+          "command": "pdoc --html --output-dir docs/ src/",
+          "description": "Generate API documentation"
+        },
+        {
+          "name": "Build Sphinx Docs",
+          "command": "cd docs && make html",
+          "description": "Build Sphinx documentation"
+        },
+        {
+          "name": "Open Docs",
+          "command": "open docs/_build/html/index.html",
+          "description": "Open documentation in browser"
+        }
+      ]
+    },
+    {
+      "name": "python-dependency-update",
+      "description": "Update project dependencies",
+      "steps": [
+        {
+          "name": "Show Outdated",
+          "command": "uv pip list --outdated",
+          "description": "List outdated packages"
+        },
+        {
+          "name": "Update All",
+          "command": "uv pip install --upgrade -r requirements.txt",
+          "description": "Update all dependencies"
+        },
+        {
+          "name": "Freeze Requirements",
+          "command": "uv pip freeze > requirements.txt",
+          "description": "Update requirements file"
+        },
+        {
+          "name": "Run Tests",
+          "command": "pytest",
+          "description": "Verify updates didn't break anything"
+        }
+      ]
+    },
+    {
+      "name": "python-docker-build",
+      "description": "Build and test Docker image",
+      "steps": [
+        {
+          "name": "Build Image",
+          "command": "docker build -t ${IMAGE_NAME}:latest .",
+          "description": "Build Docker image",
+          "variables": ["IMAGE_NAME"]
+        },
+        {
+          "name": "Run Container",
+          "command": "docker run --rm ${IMAGE_NAME}:latest python -m pytest",
+          "description": "Run tests in container",
+          "variables": ["IMAGE_NAME"]
+        },
+        {
+          "name": "Scan for Vulnerabilities",
+          "command": "docker scan ${IMAGE_NAME}:latest",
+          "description": "Scan image for security issues",
+          "variables": ["IMAGE_NAME"]
+        }
+      ]
+    }
+  ],
+  "quickCommands": {
+    "test": "pytest -v",
+    "test-watch": "pytest-watch",
+    "format": "black . && isort .",
+    "lint": "ruff check .",
+    "type-check": "mypy src/",
+    "coverage": "pytest --cov=src --cov-report=html",
+    "install": "uv pip install -e '.[dev]'",
+    "clean": "find . -type d -name __pycache__ -exec rm -rf {} + && find . -type f -name '*.pyc' -delete",
+    "shell": "python -i -c 'from src import *'",
+    "profile": "python -m cProfile -s cumulative ${SCRIPT}"
+  },
+  "preCommitChecks": [
+    "black --check .",
+    "isort --check-only .",
+    "ruff check .",
+    "mypy src/",
+    "pytest --maxfail=1"
+  ]
+}

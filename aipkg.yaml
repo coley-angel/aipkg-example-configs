@@ -47,6 +47,11 @@ agents:
         dest_path: "~/.windsurf/cascade/context/terraform_pro.md"
         ide: "windsurf"
         description: "Terraform development context for Windsurf"
+      
+      - source_path: "agents/terraform/workflows.json"
+        dest_path: "~/.codeium/windsurf/global_workflows/terraform_pro.json"
+        ide: "windsurf"
+        description: "Terraform workflow automation for Windsurf"
 
   python_dev:
     name: "python_dev"
@@ -79,3 +84,8 @@ agents:
         dest_path: "~/.windsurf/cascade/context/python_dev.md"
         ide: "windsurf"
         description: "Python development context for Windsurf"
+      
+      - source_path: "agents/python/workflows.json"
+        dest_path: "~/.codeium/windsurf/global_workflows/python_dev.json"
+        ide: "windsurf"
+        description: "Python workflow automation for Windsurf"

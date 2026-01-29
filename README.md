@@ -89,7 +89,10 @@ ai-agent-configs/
 ## Supported IDEs
 
 - **VSCode** - Full support with rules, context, workflows, and snippets
-- **Windsurf** - Full support with rules and context
+- **Windsurf** - Full support with rules, context, and global workflows
+  - Rules: `~/.windsurf/cascade/rules/`
+  - Context: `~/.windsurf/cascade/context/`
+  - Workflows: `~/.codeium/windsurf/global_workflows/`
 - **Claude Desktop** - Compatible with standard configuration paths
 
 ## Configuration
