@@ -39,12 +39,12 @@ agents:
       
       # Windsurf configurations
       - source_path: "agents/terraform/rules.md"
-        dest_path: "~/.windsurf/memories/global_rules.md"
+        dest_path: "~/.codeium/windsurf/memories/global_rules.md"
         ide: "windsurf"
         description: "Terraform coding standards for Windsurf"
       
       - source_path: "agents/terraform/context.md"
-        dest_path: "~/.windsurf/skills/terraform_pro.md"
+        dest_path: "~/.codeium/windsurf/skills/terraform_pro.md"
         ide: "windsurf"
         description: "Terraform development context for Windsurf"
       
